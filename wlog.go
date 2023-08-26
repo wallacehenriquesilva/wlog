@@ -3,7 +3,6 @@ package wlog
 import (
 	"context"
 	"os"
-	"sync"
 	"time"
 
 	"github.com/gofrs/uuid"
@@ -16,28 +15,21 @@ const (
 	correlationIDField = "correlation_id"
 )
 
-var (
-	once sync.Once
-	log  zerolog.Logger
-)
-
 func NewDefaultLogger() zerolog.Logger {
-	once.Do(func() {
-		zerolog.TimeFieldFormat = time.RFC3339Nano
 
-		buildInfo, _ := debug.ReadBuildInfo()
+	zerolog.TimeFieldFormat = time.RFC3339Nano
 
-		log = zerolog.New(os.Stdout).
-			Level(zerolog.InfoLevel).
-			With().
-			Stack().
-			Caller().
-			Timestamp().
-			Str(goVersionField, buildInfo.GoVersion).
-			Logger()
-	})
+	buildInfo, _ := debug.ReadBuildInfo()
 
-	return log
+	return zerolog.New(os.Stdout).
+		Level(zerolog.InfoLevel).
+		With().
+		Stack().
+		Caller().
+		Timestamp().
+		Str(goVersionField, buildInfo.GoVersion).
+		Logger()
+
 }
 
 func Debug(ctx context.Context) *zerolog.Event {
