@@ -16,7 +16,6 @@ const (
 )
 
 func NewDefaultLogger() zerolog.Logger {
-
 	zerolog.TimeFieldFormat = time.RFC3339Nano
 
 	buildInfo, _ := debug.ReadBuildInfo()
@@ -29,7 +28,6 @@ func NewDefaultLogger() zerolog.Logger {
 		Timestamp().
 		Str(goVersionField, buildInfo.GoVersion).
 		Logger()
-
 }
 
 func Debug(ctx context.Context) *zerolog.Event {
@@ -53,7 +51,7 @@ func Warn(ctx context.Context) *zerolog.Event {
 func Error(ctx context.Context) *zerolog.Event {
 	l := getLogger(ctx)
 
-	return l.Warn()
+	return l.Error()
 }
 
 func getLogger(ctx context.Context) *zerolog.Logger {
